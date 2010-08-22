@@ -1,0 +1,46 @@
+Collaborative filtering approach.
+
+We create a matrix of users by items that we can use to generate counts.
+
+We need to be able to count occurrences in a single pass of the data. First
+we need to be able to count the number of times all users have agreed with us
+conditioned on what we they think of the item under consideration. That is, if
+they like the item under considerations how many times did I agree with them
+when they liked other items?
+
+classify(user, item)
+
+1) get the ratings for each user for this item
+2) get all of the users who have any ratings for items in common with me
+3) count the number of overall times I rated the item class_j: p(class_j)
+
+For each class class_j and each user U_i
+4) count the proportion of times I agreed with this user conditioned on 
+    their rating for this item and my overall rating for items: p(U_i = class_k | class_j)
+
+we need a set of tuples (class_j, user_id, class_k) joined by item_id
+
+class_j is fixed and it's what I ranked the item as.
+class_k is what user_id ranked the item under consideration as.
+
+p(U_i = class_k | class_j) = COUNT(class_k = class_j) / COUNT(*)
+
+Table is follower_id, followee_id, classification (like / dislike)
+
+# single item classification
+SELECT
+  others.target_id, others.user_id,
+  CASE WHEN ratings.classification = others.classification THEN 1 ELSE 0 END AS matching_rating
+FROM
+  ratings
+LEFT JOIN ratings others
+  ON ratings.target_id = others.target_id
+WHERE
+  ratings.user_id = 1
+  AND ratings.classification = 1
+  AND (
+    (others.user_id = 1 AND others.classification = 1) 
+    OR (others.user_id = 3 AND others.classification = 0)
+    OR ...
+  )
+) matching_ratings
