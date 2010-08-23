@@ -54,7 +54,10 @@ class Ratings
     
     like_score = user_based[Like] * item_based[Like]
     dislike_score = user_based[Dislike] * item_based[Dislike]
-
+    
+    like_score = 0 if like_score.nan?
+    dislike_score = 0 if dislike_score.nan?
+    
     like_score > dislike_score ? [Ratings::Like, like_score] : [Ratings::Dislike, dislike_score]
   end
 
