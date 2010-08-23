@@ -34,7 +34,9 @@ ratings.add('U_4', 'I_3', Ratings::Like)
 ratings.add('U_4', 'I_4', Ratings::Like)
 
 puts ratings.suggest('U_4', ['I_5']).inspect
-puts ratings.suggest('U_3', ['I_1', 'I_4'], :neighborhood => ['U_1', 'U_4']).inspect
+# puts ratings.suggest('U_3', ['I_1', 'I_4'], :neighborhood => ['U_1', 'U_4']).inspect
+
+
 
 # So one of the things you want to do is to filter
 #  the items under consideration and the users in the neighborhood

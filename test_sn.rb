@@ -4,7 +4,9 @@ require 'fastercsv'
 require 'ratings'
 require 'ostruct'
 
-my_id = '97457'
+my_id = '97457' # jordi
+
+people = {}
 
 actual = {}
 my_followees = Set.new
@@ -18,6 +20,9 @@ FasterCSV.open('declined.csv').each do |row|
 end
 
 FasterCSV.open('followings.csv').each do |row|
+  people[row[0]] = row[1]
+  people[row[2]] = row[3]
+  
   all_followees << row[2]
   my_followees << row[2] if row[0] == my_id
   my_followers << row[0] if row[2] == my_id
@@ -31,6 +36,23 @@ actual.each do |users, rating|
 end
 
 not_following = all_followees - my_followees - my_declinations
-puts ratings.suggest(my_id, not_following, :neighborhood => my_followers).inspect
 
-# puts ratings.suggest("97113", )
+# ratings.suggest(my_id, not_following, :neighborhood => my_followers).each do |person, suggestion|
+#   puts "#{people[person]} => #{suggestion}"
+# end
+
+should_recommend = []
+should_not_recommend = []
+ratings.suggest(my_id, not_following, :user_neighborhood => my_followers, :item_neighborhood => my_followees).each do |person, suggestion|
+  if suggestion.include?(Ratings::Like)
+    should_recommend << people[person]
+  else
+    should_not_recommend << people[person]
+  end
+end
+
+puts "We recommend:"
+puts should_recommend.inspect
+
+puts "We do not recommend:"
+puts should_not_recommend.inspect
