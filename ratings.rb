@@ -133,8 +133,8 @@ class Ratings
         class_ratings_count += (ib_ratings["#{rated_id}:#{class_j}"] || []).length
 
         # remove the user_id from the list of ratings here
-        similar_ratings = (item_ratings & (ib_ratings["#{rated_id}:all"] - user_id))
-        matching_ratings = (item_class_ratings & (ib_ratings["#{rated_id}:#{rating}"] - user_id))
+        similar_ratings = (item_ratings & ib_ratings["#{rated_id}:all"])
+        matching_ratings = (item_class_ratings & ib_ratings["#{rated_id}:#{rating}"])
                 
         next if similar_ratings == false or matching_ratings == false
         scores[class_j] *= matching_ratings.length.to_f / similar_ratings.length.to_f
