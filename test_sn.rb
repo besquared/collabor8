@@ -2,17 +2,15 @@ require 'set'
 require 'rubygems'
 require 'fastercsv'
 require 'ratings'
-require 'ostruct'
-
-my_id = '97457' # jordi
 
 people = {}
-
 actual = {}
 my_followees = Set.new
 my_followers = Set.new
 all_followees = Set.new
 my_declinations = Set.new
+
+my_id = '96117' # jordi
 
 FasterCSV.open('declined.csv').each do |row|
   my_declinations = row[1] if row[0] == my_id
@@ -54,5 +52,6 @@ end
 puts "We recommend:"
 puts should_recommend.sort_by{|pair| pair.last}.reverse.inspect
 
+puts should_not_recommend.inspect
 puts "We do not recommend:"
 puts should_not_recommend.sort_by{|pair| pair.last}.reverse.inspect
