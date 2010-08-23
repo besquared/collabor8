@@ -55,7 +55,7 @@ class Ratings
     like_score = user_based[Like] * item_based[Like]
     dislike_score = user_based[Dislike] * item_based[Dislike]
 
-    like_score > dislike_score ? Ratings::Like : Ratings::Dislike
+    like_score > dislike_score ? [Ratings::Like, like_score] : [Ratings::Dislike, dislike_score]
   end
 
   def user_based_classification(user_id, item_id, options = {})

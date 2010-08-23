@@ -45,14 +45,14 @@ should_recommend = []
 should_not_recommend = []
 ratings.suggest(my_id, not_following, :user_neighborhood => my_followers, :item_neighborhood => my_followees).each do |person, suggestion|
   if suggestion.include?(Ratings::Like)
-    should_recommend << people[person]
+    should_recommend << [people[person], suggestion.last]
   else
-    should_not_recommend << people[person]
+    should_not_recommend << [people[person], suggestion.last]
   end
 end
 
 puts "We recommend:"
-puts should_recommend.inspect
+puts should_recommend.sort_by{|pair| pair.last}.reverse.inspect
 
 puts "We do not recommend:"
-puts should_not_recommend.inspect
+puts should_not_recommend.sort_by{|pair| pair.last}.reverse.inspect
