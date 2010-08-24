@@ -7,9 +7,20 @@ import com.kamikaze.docidset.utils._
 // {api, impl, utils}
 
 object RatingMatrix {
-  def test() {
-    var pForDeltaDocSet = PForDeltaDocSetFactory.getPForDeltaDocSetInstance()
-    pForDeltaDocSet.addDoc(100)
+  val docset = PForDeltaDocSetFactory.getPForDeltaDocSetInstance()
+  
+  def add(user_id:Int, item_id:Int, rating:Int) {
+    docset.addDoc(user_id)
     return true
   }
+  
+  def updateUserVectors(user_id:Int, item_id:Int, rating:Int) {
+    
+  }
+  
+  def updateItemVectors(user_id:Int, item_id:Int, rating:Int) {
+    
+  }
+  
+  
 }
