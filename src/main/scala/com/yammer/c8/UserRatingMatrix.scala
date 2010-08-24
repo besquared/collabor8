@@ -5,7 +5,7 @@ import com.kamikaze.docidset.impl._
 import com.kamikaze.docidset.utils._
 import scala.collection.mutable.HashMap
 
-object UserRatingMatrix extends RatingMatrix {
+object UserRatingMatrix {
   val data = new HashMap[String, Int]
   val indices = new HashMap[String, DocSet]
   
@@ -18,13 +18,27 @@ object UserRatingMatrix extends RatingMatrix {
     
     // Indices
     insert(item_id.toString() + ":rater", user_id)
-    insert(item_id.toString() + ":rating", rating)
     insert(user_id.toString() + ":rated", item_id)
     insert(user_id.toString() + ":" + rating.toString(), item_id)
   }
   
   def find(user_id:Int, item_id:Int):Option[Int] = {
     data.get(item_id.toString() + user_id.toString())
+  }
+  
+  // Returns the set of users who rated the item
+  def find_raters(item_id:Int):Option[DocSet] = {
+    indices.get(item_id.toString() + ":rater")
+  }
+  
+  // Returns the set of items rated by a user
+  def find_rated(user_id:Int):Option[DocSet] = {
+    indices.get(user_id.toString() + ":rated")
+  }
+  
+  // Returns the set of items rated 'rating' by the user
+  def find_rated(user_id:Int, rating:Int):Option[DocSet] = {
+    indices.get(user_id.toString() + ":" + rating.toString())
   }
   
   protected def insert(key:String, value:Int) {
