@@ -3,9 +3,9 @@ package com.yammer.c8.tests
 import com.codahale.simplespec.Spec
 import com.yammer.c8.UserRatingMatrix
 
-object UserRatingMatrixSpec extends Spec {
+object RatingMatrixSpec extends Spec {
   class `A normal ratings matrix` {
-    val matrix = UserRatingMatrix
+    val matrix = RatingMatrix
 
     def `should insert new entries` {
       matrix.insert(1, 1, -1)
