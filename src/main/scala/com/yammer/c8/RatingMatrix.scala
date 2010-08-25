@@ -34,6 +34,11 @@ object RatingMatrix {
     indices.get(item_id.toString() + ":rater")
   }
   
+  // Returns the set of users who rated the item 'rating'
+  def findRaters(item_id:Int, rating:Int):Option[DocSet] = {
+    indices.get(item_id.toString() + ":" + rating.toString())
+  }
+  
   // Returns the set of items rated by a user
   def findRated(user_id:Int):Option[DocSet] = {
     indices.get(user_id.toString() + ":rated")
