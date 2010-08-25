@@ -2,7 +2,6 @@ package com.yammer.c8.tests
 
 import com.codahale.simplespec.Spec
 import com.yammer.c8.RatingMatrix
-import org.apache.lucene.search.DocIdSetIterator
 
 object RatingMatrixSpec extends Spec {
   class `A ratings matrix` {
@@ -17,13 +16,16 @@ object RatingMatrixSpec extends Spec {
     }
     
     def `should find all classes` {
-      val classes = matrix.findClasses
-      
-      classes must beSomething
+      matrix.findClasses match {
+        case None =>
+          return false
+        case Some(classes) =>
+          classes.size must be(2)
+      }
     }
     
-    def `should find all ratings` {
-      val ratings = matrix.findRatings(1)
+    def `should find all ratings for an item` {
+      val ratings = matrix.findRatingsForItem(1)
       ratings must havePair((1, -1))
       ratings must havePair((2, 1))
     }
@@ -33,12 +35,6 @@ object RatingMatrixSpec extends Spec {
         case None =>
           return false
         case Some(users) =>
-          val iter = users.iterator()
-          var user_id = iter.nextDoc()
-          while(user_id != DocIdSetIterator.NO_MORE_DOCS) {
-            println(user_id)
-            user_id = iter.nextDoc()
-          }
           users.size must be(2)
       }
     }

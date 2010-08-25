@@ -39,15 +39,15 @@ object RatingMatrix {
   }
   
   // Returns every user's rating for an item
-  def findRatings(item_id:Int):HashMap[Int, Int] = {
+  def findRatingsForItem(item_id:Int):HashMap[Int, Int] = {
     var ratings = new HashMap[Int, Int]
     
     findUsersWhoRated(item_id) match {
       case None =>
         return ratings
-      case Some(raters) =>
-        val rater = raters.iterator()
-        var user_id = rater.nextDoc()
+      case Some(users) =>
+        val user = users.iterator()
+        var user_id = user.nextDoc()
         while(user_id != DocIdSetIterator.NO_MORE_DOCS) {
           findRating(user_id, item_id) match {
             case None =>
@@ -56,7 +56,32 @@ object RatingMatrix {
               ratings.put(user_id, rating)
           }
 
-          user_id = rater.nextDoc()
+          user_id = user.nextDoc()
+        }
+    }
+      
+    return ratings
+  }
+  
+  // Returs every item's rating from a user
+  def findRatingsForUser(user_id:Int):HashMap[Int, Int] = {
+    var ratings = new HashMap[Int, Int]
+    
+    findItemsRatedBy(user_id) match {
+      case None =>
+        return ratings
+      case Some(items) =>
+        val item = items.iterator()
+        var item_id = item.nextDoc()
+        while(item_id != DocIdSetIterator.NO_MORE_DOCS) {
+          findRating(user_id, item_id) match {
+            case None =>
+              // do nothing?
+            case Some(rating) =>
+              ratings.put(item_id, rating)
+          }
+
+          item_id = item.nextDoc()
         }
     }
       
