@@ -16,8 +16,11 @@ object RatingMatrix {
     // Data
     data.put(item_id.toString() + user_id.toString(), rating)
     
-    // Indices
+    // Item Indices
     insert(item_id.toString() + ":rater", user_id)
+    insert(item_id.toString() + ":" + rating.toString(), user_id)
+    
+    // User Indices
     insert(user_id.toString() + ":rated", item_id)
     insert(user_id.toString() + ":" + rating.toString(), item_id)
   }
@@ -27,17 +30,17 @@ object RatingMatrix {
   }
   
   // Returns the set of users who rated the item
-  def find_raters(item_id:Int):Option[DocSet] = {
+  def findRaters(item_id:Int):Option[DocSet] = {
     indices.get(item_id.toString() + ":rater")
   }
   
   // Returns the set of items rated by a user
-  def find_rated(user_id:Int):Option[DocSet] = {
+  def findRated(user_id:Int):Option[DocSet] = {
     indices.get(user_id.toString() + ":rated")
   }
   
   // Returns the set of items rated 'rating' by the user
-  def find_rated(user_id:Int, rating:Int):Option[DocSet] = {
+  def findRated(user_id:Int, rating:Int):Option[DocSet] = {
     indices.get(user_id.toString() + ":" + rating.toString())
   }
   
