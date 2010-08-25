@@ -81,7 +81,7 @@ class Ratings
         rating_pair = item_rating.split(':')
         rater_id, rating = rating_pair.first, rating_pair.last
         
-        # don't consider user as a rater or other raters 
+        # don't consider user as a rater or other raters
         #  that aren't in the neighborhood as part of similarity match
         next if user_id == rater_id
         next if options[:user_neighborhood] and not options[:user_neighborhood].include?(rater_id)
