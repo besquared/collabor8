@@ -4,7 +4,7 @@ import scala.collection.mutable.Set
 import scala.collection.mutable.Seq
 import scala.collection.mutable.HashMap
 
-object RatingMatrix {
+class RatingMatrix {
   // userId:items => 1,2,3,...
   // userId:<rating> => 1,3,...
   val userIndex = new HashMap[String, Set[Int]]
@@ -29,14 +29,13 @@ object RatingMatrix {
   def insertUserIndex(userId:Int, itemId:Int, rating:Int) {
     val itemKey = userId.toString() + ":items"
     val ratingKey = userId.toString() + ":" + rating.toString()
-    
     List(itemKey, ratingKey).foreach(
       key =>
         userIndex.get(key) match {
-          case Some(userIdx) =>
-            userIdx + itemId
           case None => 
             userIndex.put(key, Set(itemId))
+          case Some(userIdx) =>
+            userIndex.put(key, userIdx + itemId)
         }
     )
   }
@@ -44,91 +43,60 @@ object RatingMatrix {
   def insertItemIndex(userId:Int, itemId:Int, rating:Int) {
     val userKey = itemId.toString() + ":users"
     val ratingKey = itemId.toString() + ":" + rating.toString()
-    
     List(userKey, ratingKey).foreach(
       key =>
         itemIndex.get(key) match {
-          case Some(itemIdx) =>
-            itemIdx + userId
           case None => 
             itemIndex.put(key, Set(userId))
+          case Some(itemIdx) =>
+            itemIndex.put(key, itemIdx + userId)
         }
     )
   }
   
   def insertUserRating(userId:Int, itemId:Int, rating:Int) {
-    val itemKey = itemId.toString()
-    
-    userRatings.get(itemKey) match {
-      case Some(userRatings) =>
-        userRatings ++ Seq(itemId, rating)
+    val userKey = userId.toString()
+    userRatings.get(userKey) match {
       case None =>
-        userRatings.put(itemKey, Seq(itemId, rating))
+        userRatings.put(userKey, Seq(itemId, rating))
+      case Some(userRating) =>
+        userRatings.put(userKey, userRating ++ Seq(itemId, rating))
     }
   }
   
   def insertItemRating(userId:Int, itemId:Int, rating:Int) {
-    val userKey = userId.toString()
-    
-    itemRatings.get(userKey) match {
-      case Some(itemRatings) =>
-        itemRatings ++ Seq(userId, rating)
+    val itemKey = itemId.toString()
+    itemRatings.get(itemKey) match {
       case None =>
-        itemRatings.put(userKey, Seq(userId, rating))
+        itemRatings.put(itemKey, Seq(userId, rating))
+      case Some(itemRating) =>
+        itemRatings.put(itemKey, itemRating ++ Seq(userId, rating))
     }
   }
-    
+  
   /*
    * Ways to access information
    */
   
   // Returns every user's rating for an item
   def findRatingsForItem(itemId:Int):HashMap[Int, Int] = {
-    var ratings = new HashMap[Int, Int]
-    
-    // findUsersWhoRated(itemId) match {
-    //   case None =>
-    //     return ratings
-    //   case Some(users) =>
-    //     val user = users.iterator()
-    //     var userId = user.nextDoc()
-    //     while(userId != DocIdSetIterator.NO_MORE_DOCS) {
-    //       findRating(userId, itemId) match {
-    //         case None =>
-    //           // do nothing?
-    //         case Some(rating) =>
-    //           ratings.put(userId, rating)
-    //       }
-    // 
-    //       userId = user.nextDoc()
-    //     }
-    // }
-      
+    val ratings = new HashMap[Int, Int]
+    itemRatings.get(itemId.toString()).foreach(pairs => {
+      pairs.grouped(2).foreach(pair => {
+        ratings.put(pair.head, pair.last)
+      })
+    })
     return ratings
   }
   
   // Returs every item's rating from a user
   def findRatingsForUser(userId:Int):HashMap[Int, Int] = {
-    var ratings = new HashMap[Int, Int]
-    
-    // findItemsRatedBy(userId) match {
-    //   case None =>
-    //     return ratings
-    //   case Some(items) =>
-    //     val item = items.iterator()
-    //     var itemId = item.nextDoc()
-    //     while(itemId != DocIdSetIterator.NO_MORE_DOCS) {
-    //       findRating(userId, itemId) match {
-    //         case None =>
-    //           // do nothing?
-    //         case Some(rating) =>
-    //           ratings.put(itemId, rating)
-    //       }
-    // 
-    //       itemId = item.nextDoc()
-    //     }
-    // }
-      
+    val ratings = new HashMap[Int, Int]    
+    userRatings.get(userId.toString()).foreach(pairs =>
+      pairs.grouped(2).foreach(pair =>
+        ratings.put(pair.head, pair.last)
+      )
+    )
     return ratings
   }
   
