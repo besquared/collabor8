@@ -15,8 +15,9 @@ class BayesianUserFilter(ratings:RatingMatrix) {
     
     List(-1, 1).foreach(
       classJ => {
-        var allRatingsCount = 0
-        var classRatingsCount = 0
+        scores(classJ) = 1
+        var allRatingsCount = 0.0
+        var classRatingsCount = 0.0
         val userClassRatings = ratings.findItemsWithRatings(userId, classJ)
         
         for((raterId, rating) <- ratings.findRatingsForItem(itemId)) {
