@@ -4,7 +4,7 @@ import scala.collection.mutable.Set
 import scala.collection.mutable.Seq
 import scala.collection.mutable.HashMap
 
-class BayesianUserFilter(ratings:RatingMatrix) {
+class BayesianUserFilter(ratings:RatingMatrix, classes:List[Int]) {
   def classify(userId:Int, itemIds:Set[Int], neighborhood:Set[Int]) {
     // classify all items
   }
@@ -13,7 +13,7 @@ class BayesianUserFilter(ratings:RatingMatrix) {
     val scores = new HashMap[Int, Double]
     val userRatings = ratings.findItemsRatedBy(userId)
     
-    List(-1, 1).foreach(
+    classes.foreach(
       classJ => {
         scores(classJ) = 1
         var allRatingsCount = 0.0
