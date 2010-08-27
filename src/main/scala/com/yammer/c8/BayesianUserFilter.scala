@@ -5,11 +5,11 @@ import scala.collection.mutable.Seq
 import scala.collection.mutable.HashMap
 
 class BayesianUserFilter(ratings:RatingMatrix) {
-  def classify(userId:Int, itemIds:Set[Int], neighborhood:Set[Int], candidates:Set[Int]) {
+  def classify(userId:Int, itemIds:Set[Int], neighborhood:Set[Int]) {
     // classify all items
   }
   
-  def classify(userId:Int, itemId:Int, neighborhood:Set[Int], candidates:Set[Int]) {
+  def classify(userId:Int, itemId:Int, neighborhood:Set[Int]) {
     val scores = new HashMap[Int, Double]
     val userRatings = ratings.findItemsRatedBy(userId)
     
